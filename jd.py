@@ -17,6 +17,8 @@ import math
 import copy
 import yaml
 
+#Scott's Commit Test
+
 locale.setlocale(locale.LC_ALL, "") # Used to put commas in the score.
 #curr_file_path = os.path.dirname(os.path.abspath(sys.argv[0]))
 curr_file_path = os.path.dirname(os.path.abspath( __file__ ))
