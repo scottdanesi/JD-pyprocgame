@@ -1,0 +1,13 @@
+# This is a JD flasher lampshow template
+# Lines must be in mutliples of 32
+coil:flashersLowerLeft  |                                
+coil:flasherPursuitL    |                                
+coil:flasherCursedEarth |                                
+coil:flasherGlobe       |                                
+coil:flashersRtRamp     |                                
+coil:flasherPursuitR    |                                
+coil:flasherBlackout    |                                
+coil:flasherFire        |                                
+coil:flasherFear        |                                
+coil:flasherDeath       |                                
+coil:flasherMortis      |                                
