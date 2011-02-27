@@ -341,6 +341,7 @@ class Blackout(ChainFeature):
 
 	def mode_stopped(self):
 		self.game.lamps.blackoutJackpot.disable()
+		self.game.lamps.multiballJackpot.disable()
 		self.game.coils.flasherBlackout.disable()
 		self.game.lamps.gi01.pulse(0)
 		self.game.lamps.gi02.pulse(0)
@@ -353,8 +354,18 @@ class Blackout(ChainFeature):
 		self.game.lamps.gi03.disable()
 		self.game.lamps.gi04.disable()
 		self.game.lamps.blackoutJackpot.schedule(schedule=0x000F000F, cycle_seconds=0, now=True)
+		self.game.lamps.multiballJackpot.schedule(schedule=0x000F000F, cycle_seconds=0, now=True) 
 
 	def sw_centerRampExit_active(self, sw):
+		self.completed = True
+		self.game.coils.flasherBlackout.schedule(schedule=0x000F000F, cycle_seconds=0, now=True)
+		self.shots += 1
+		self.game.score(10000)
+		print "% 10.3f Blackout calling callback" % (time.time())
+		self.check_for_completion()
+		
+	def sw_subwayEnter1_closed(self, sw):
+		#Entering Rave
 		self.completed = True
 		self.game.coils.flasherBlackout.schedule(schedule=0x000F000F, cycle_seconds=0, now=True)
 		self.shots += 1
