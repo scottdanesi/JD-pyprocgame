@@ -17,6 +17,8 @@ import math
 import copy
 import yaml
 
+#This File modified by Scott Danesi
+
 
 locale.setlocale(locale.LC_ALL, "") # Used to put commas in the score.
 #curr_file_path = os.path.dirname(os.path.abspath(sys.argv[0]))
