@@ -28,6 +28,7 @@ class ModeCompletedHurryup(game.Mode):
 	
 	def mode_started(self):
 		self.banner_layer.set_text("HURRY-UP!", 3)
+		#Placeholder for "Shoot the Subway Audio"
 		self.seconds_remaining = 13
 		self.update_and_delay()
 		self.update_lamps()
@@ -326,7 +327,9 @@ class Blackout(ChainFeature):
 			self.shots_required_for_completion = 2
 
 	def mode_started(self):
+		#self.shots will be used as ravers captured
 		self.shots = 0
+		self.rave_started = 0
 		self.update_status()
 		filename = curr_file_path + "/dmd/blackout.dmd"
 		if os.path.isfile(filename):
@@ -335,8 +338,14 @@ class Blackout(ChainFeature):
 		self.update_lamps()
 
 	def update_status(self):
-		status = 'Shots made: ' + str(self.shots) + '/' + str(self.shots_required_for_completion)
-		self.status_layer.set_text(status)
+		if self.rave_started == 1:
+			#Rave Started
+			status = 'Ravers Captured: ' + str(self.shots)
+			self.status_layer.set_text(status)
+		else:
+			#Rave not started
+			status = 'Shoot the subway'
+			self.status_layer.set_text(status)
 		
 
 	def mode_stopped(self):
@@ -349,12 +358,25 @@ class Blackout(ChainFeature):
 		self.game.lamps.gi04.pulse(0)
 
 	def update_lamps(self):
-		self.game.lamps.gi01.disable()
-		self.game.lamps.gi02.disable()
-		self.game.lamps.gi03.disable()
-		self.game.lamps.gi04.disable()
-		#self.game.lamps.blackoutJackpot.schedule(schedule=0x000F000F, cycle_seconds=0, now=True)
-		self.game.lamps.multiballJackpot.schedule(schedule=0x000F000F, cycle_seconds=0, now=True) 
+		#Check if Blackout Rave started
+		if self.rave_started == 1:
+			#Rave Started
+			#Update GI
+			self.game.lamps.gi01.disable()
+			self.game.lamps.gi02.disable()
+			self.game.lamps.gi03.disable()
+			self.game.lamps.gi04.disable()
+			#Enable Blackout Ramp Flasher
+			self.game.lamps.blackoutJackpot.schedule(schedule=0x000F000F, cycle_seconds=0, now=True)
+		else:
+			#Rave not started
+			#Update GI
+			self.game.lamps.gi01.pulse(0)
+			self.game.lamps.gi02.pulse(0)
+			self.game.lamps.gi03.pulse(0)
+			self.game.lamps.gi04.pulse(0)
+			#Player still needs to shoot the subway
+			self.game.lamps.multiballJackpot.schedule(schedule=0x000F000F, cycle_seconds=0, now=True)
 
 	def sw_centerRampExit_active(self, sw):
 		self.completed = True
