@@ -344,7 +344,7 @@ class Blackout(ChainFeature):
 			self.status_layer.set_text(status)
 		else:
 			#Rave not started
-			status = 'Shoot the subway'
+			status = 'Shoot the Center Ramp'
 			self.status_layer.set_text(status)
 		
 
@@ -375,25 +375,23 @@ class Blackout(ChainFeature):
 			self.game.lamps.gi02.pulse(0)
 			self.game.lamps.gi03.pulse(0)
 			self.game.lamps.gi04.pulse(0)
-			#Player still needs to shoot the subway
-			self.game.lamps.multiballJackpot.schedule(schedule=0x000F000F, cycle_seconds=0, now=True)
+			#Player still needs to shoot the center rampt o enter the rave
+			self.game.lamps.blackoutJackpot.schedule(schedule=0x000F000F, cycle_seconds=0, now=True)
 
 	def sw_centerRampExit_active(self, sw):
 		self.completed = True
 		self.game.coils.flasherBlackout.schedule(schedule=0x000F000F, cycle_seconds=0, now=True)
-		self.shots += 1
 		self.game.score(10000)
 		print "% 10.3f Blackout calling callback" % (time.time())
 		self.check_for_completion()
-		
-	def sw_subwayEnter1_closed(self, sw):
-		#Entering Rave
-		self.completed = True
-		self.game.coils.flasherBlackout.schedule(schedule=0x000F000F, cycle_seconds=0, now=True)
-		self.shots += 1
-		self.game.score(10000)
-		print "% 10.3f Blackout calling callback" % (time.time())
-		self.check_for_completion()
+		if self.rave_started == 1:
+			#Rave in progress
+			self.shots += 1
+			#Collect Jackpot
+		else:
+			#Enter the Rave!!!
+			
+		update_lamps()
 
 	def check_for_completion(self):
 		self.update_status()
