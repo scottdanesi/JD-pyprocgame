@@ -1,2 +1,6 @@
 *.pyc
 *.bat
+*.aif
+*.mp3
+*.wav
+*.dmd
