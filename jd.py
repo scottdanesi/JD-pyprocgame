@@ -41,6 +41,7 @@ font_07x5 = dmd.font_named("Font07x5.dmd")
 font_09Bx7 = dmd.font_named("Font09Bx7.dmd")
 splash = curr_file_path + "/dmd/Splash.dmd"
 
+#Register Lampshow files for attract mode
 lampshow_files = [curr_file_path + "/lamps/attract_show_horiz.lampshow", \
                   curr_file_path + "/lamps/attract_show_vert.lampshow" \
                  ]
@@ -76,7 +77,7 @@ class Attract(game.Mode):
 
 		# Blink the start button to notify player about starting a game.
 		self.game.lamps.startButton.schedule(schedule=0x00ff00ff, cycle_seconds=0, now=False)
-		# Blink the start button to notify player about starting a game.
+		# Blink the supergame button to notify player about starting a game.
 		self.game.lamps.superGame.schedule(schedule=0x00ff00ff, cycle_seconds=0, now=False)
 		# Turn on minimal GI lamps
 		self.game.lamps.gi01.pulse(0)
@@ -226,7 +227,8 @@ class Attract(game.Mode):
 	def change_lampshow(self):
 		shuffle(self.game.lampshow_keys)
 		self.game.lampctrl.play_show(self.game.lampshow_keys[0], repeat=True)
-		self.delay(name='lampshow', event_type=None, delay=10, handler=self.change_lampshow)
+		#Sets the delay between switching between different attract mode lampshows
+		self.delay(name='lampshow', event_type=None, delay=5, handler=self.change_lampshow)
 
 	def sw_fireL_active(self, sw):
 		self.game.sound.play_voice('attract')
