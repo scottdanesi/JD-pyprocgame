@@ -353,7 +353,7 @@ class Blackout(ChainFeature):
 		self.game.lamps.gi02.disable()
 		self.game.lamps.gi03.disable()
 		self.game.lamps.gi04.disable()
-		self.game.lamps.blackoutJackpot.schedule(schedule=0x000F000F, cycle_seconds=0, now=True)
+		#self.game.lamps.blackoutJackpot.schedule(schedule=0x000F000F, cycle_seconds=0, now=True)
 		self.game.lamps.multiballJackpot.schedule(schedule=0x000F000F, cycle_seconds=0, now=True) 
 
 	def sw_centerRampExit_active(self, sw):
