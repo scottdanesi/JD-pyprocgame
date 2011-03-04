@@ -331,6 +331,8 @@ class Blackout(ChainFeature):
 		self.shots = 0
 		self.rave_started = 0
 		self.update_status()
+		#Need to add code here to change music
+		#
 		filename = curr_file_path + "/dmd/blackout.dmd"
 		if os.path.isfile(filename):
 			anim = dmd.Animation().load(filename)
@@ -346,6 +348,13 @@ class Blackout(ChainFeature):
 			#Rave not started
 			status = 'Shoot the Center Ramp'
 			self.status_layer.set_text(status)
+			
+	def blackout_start_rave_seq(self):
+		self.rave_started = 1
+		update_lamps()
+		update_status()
+		#Switch Music Track
+		#Start Flasher Sequences
 		
 
 	def mode_stopped(self):
@@ -381,18 +390,18 @@ class Blackout(ChainFeature):
 	def sw_centerRampExit_active(self, sw):
 		self.completed = True
 		self.game.coils.flasherBlackout.schedule(schedule=0x000F000F, cycle_seconds=0, now=True)
-		self.game.score(10000)
+		#self.game.score(10000)
 		print "% 10.3f Blackout calling callback" % (time.time())
 		self.check_for_completion()
 		if self.rave_started == 1:
-			#Rave in progress
+			#Rave in progress, so add captured raver
 			self.shots += 1
 			#Collect Jackpot
+			self.game.score(30000)
 		else:
 			#Enter the Rave!!!
-			
-		update_lamps()
-
+			blackout_start_rave_seq()
+					
 	def check_for_completion(self):
 		self.update_status()
 		if self.shots == self.shots_required_for_completion:
