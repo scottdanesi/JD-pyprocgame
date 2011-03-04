@@ -346,7 +346,7 @@ class Blackout(ChainFeature):
 			self.status_layer.set_text(status)
 		else:
 			#Rave not started
-			status = 'Shoot the Center Ramp'
+			status = 'Shoot the Center Ramp '
 			self.status_layer.set_text(status)
 			
 	def blackout_start_rave_seq(self):
