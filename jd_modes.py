@@ -113,7 +113,7 @@ class JD_Modes(modes.Scoring_Mode):
 		self.game.sound.register_music('multiball', music_path+"55 second loopable -- Sonya.aif")
 		self.game.sound.register_music('multiball', music_path+"105 second loopable -- Sisyphus.aif")
 		#Register music for Blackout Mode
-		self.game.sound.register_music('rave', music_path+"blackout_rave_music1.wav")
+		self.game.sound.register_music('rave', music_path+"blackout_rave_music1.mp3")
 
 	def reset(self):
 		#self.state = 'pre_ultimate_challenge'
