@@ -319,6 +319,8 @@ class Blackout(ChainFeature):
 	def __init__(self, game, priority):
 		super(Blackout, self).__init__(game, priority, 'Blackout')
 		difficulty = self.game.user_settings['Gameplay']['Chain feature difficulty']
+		#Register Rave Lampshows
+		self.game.lampctrl.register_show('rave_lamps', curr_file_path + "/lamps/flashers_blackout_rave.lampshow")
 		if difficulty == 'easy':
 			self.shots_required_for_completion = 1
 		elif difficulty == 'medium':
@@ -357,6 +359,7 @@ class Blackout(ChainFeature):
 		self.game.sound.stop_music()
 		self.game.sound.play_music('rave', loops=-1)
 		#Start Flasher Sequences after delay
+		self.game.lampctrl.play_show('rave_lamps', repeat=True)
 		#add 60 seconds to the clock
 		
 
@@ -364,6 +367,8 @@ class Blackout(ChainFeature):
 		self.game.lamps.blackoutJackpot.disable()
 		self.game.lamps.multiballJackpot.disable()
 		self.game.coils.flasherBlackout.disable()
+		#Stop the rave flasher show
+		self.game.lampctrl.stop_show()
 		self.game.lamps.gi01.pulse(0)
 		self.game.lamps.gi02.pulse(0)
 		self.game.lamps.gi03.pulse(0)
