@@ -354,7 +354,8 @@ class Blackout(ChainFeature):
 		update_lamps()
 		update_status()
 		#Switch Music Track
-		#Start Flasher Sequences
+		#Start Flasher Sequences after delay
+		#add 60 seconds to the clock
 		
 
 	def mode_stopped(self):
@@ -398,6 +399,8 @@ class Blackout(ChainFeature):
 			self.shots += 1
 			#Collect Jackpot
 			self.game.score(30000)
+			#Play Audio "Raver Captured"
+			#
 		else:
 			#Enter the Rave!!!
 			blackout_start_rave_seq()
