@@ -353,15 +353,19 @@ class Blackout(ChainFeature):
 			
 	def blackout_start_rave_seq(self):
 		self.rave_started = 1
-		self.update_lamps()
 		self.update_status()
 		#Switch Music Track
 		self.game.sound.stop_music()
 		self.game.sound.play_music('rave', loops=-1)
+		#add 58 seconds to the clock to match the music
+		self.timer = 58
+		#delay the flashers and lamps to match music
+		self.delay(name='rave_start_delay', event_type=None, delay=1.2, handler=self.blackout_start_rave_lamps)
+		
+	def blackout_start_rave_lamps(self):
 		#Start Flasher Sequences after delay
 		self.game.lampctrl.play_show('rave_lamps', repeat=True)
-		#add 60 seconds to the clock
-		
+		self.update_lamps()
 
 	def mode_stopped(self):
 		self.game.lamps.blackoutJackpot.disable()
