@@ -315,6 +315,13 @@ class Pursuit(ChainFeature):
 		return instruction_layers
 	
 class Blackout(ChainFeature):
+#########################################################
+#Blackout v1.0
+#This is a mode where Dredd tries to locate an illegal
+#rave that is causing blackouts in Mega City One.  Once
+#he gets entry to the rave he must capture as many of
+#the party-goers as he can.
+#########################################################
 	"""docstring for AttractMode"""
 	def __init__(self, game, priority):
 		super(Blackout, self).__init__(game, priority, 'Blackout')
