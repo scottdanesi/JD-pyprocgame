@@ -326,15 +326,36 @@ class Blackout(ChainFeature):
 	def __init__(self, game, priority):
 		super(Blackout, self).__init__(game, priority, 'Blackout')
 		difficulty = self.game.user_settings['Gameplay']['Chain feature difficulty']
-		#Register Rave Lampshows
-		self.game.lampctrl.register_show('rave_lamps', curr_file_path + "/lamps/flashers_blackout_rave.lampshow")
+		###############MODE CONSTANTS AND REGISTRATIONS###############################################################
+		###Shots Required For Completion of Mode######################################################################
 		if difficulty == 'easy':
 			self.shots_required_for_completion = 1
 		elif difficulty == 'medium':
 			self.shots_required_for_completion = 1
 		else:
 			self.shots_required_for_completion = 2
-
+			
+		###Ball Save time (in seconds)################################################################################
+		self.rave_ball_save_time = 10
+		###Ball Save Number of Balls to Save##########################################################################
+		self.rave_ball_save_number_of_saves = 1
+		###Initial Time to Shoot The Center Ramp (in seconds)#########################################################
+		self.rave_initial_timer = 58
+		###Lightshow Delay Time After Rave Started (in seconds)#######################################################
+		self.rave_lightshow_delay = 1.2 #This is used to match the lights with the start of the rave music############
+		###Timer Increment After Raver Captured (in seconds)##########################################################
+		self.rave_timer_inc = 10
+		###Raver Captured Score Award#################################################################################
+		self.rave_capture_score = 30000
+		###Mode Completion Score Award################################################################################
+		self.rave_completion_score = 50000
+		###Register Rave Lampshows####################################################################################
+		self.game.lampctrl.register_show('rave_lamps', curr_file_path + "/lamps/flashers_blackout_rave.lampshow")
+		###Register Audio#############################################################################################
+		self.game.sound.register_sound('capture_raver', voice_path + "crimescenes/great shot.wav")
+		self.game.sound.register_sound('capture_raver', voice_path + "crimescenes/incredible shot.wav")
+		###############END MODE CONSTANTS AND REGISTRATIONS###########################################################
+			
 	def mode_started(self):
 		#self.shots will be used as ravers captured
 		self.shots = 0
@@ -362,13 +383,24 @@ class Blackout(ChainFeature):
 		#Switch Music Track
 		self.game.sound.stop_music()
 		self.game.sound.play_music('rave', loops=-1)
-		#add 58 seconds to the clock to match the music
-		self.timer = 58
+		#check if ball save is active and add 10 seconds or give a 10 second ball save
+		if self.game.ball_save.timer > 0:
+			#self.game.set_status('+10 second ball saver')
+			self.game.ball_save.add(self.rave_ball_save_time)
+		else:
+			self.game.ball_save.callback = None
+			#self.game.set_status('save  ' + str(self.game.trough.num_balls_in_play) + ' balls')
+			#self.game.ball_save.start(num_balls_to_save=self.game.trough.num_balls_in_play, time=10, now=True, allow_multiple_saves=True)
+			self.game.ball_save.start(num_balls_to_save=self.rave_ball_save_number_of_saves, time=self.rave_ball_save_time, now=True, allow_multiple_saves=True)
+			
+		#put time on the clock to match the music
+		self.timer = self.rave_initial_timer
 		#delay the flashers and lamps to match music
-		self.delay(name='rave_start_delay', event_type=None, delay=1.2, handler=self.update_lamps)
+		self.delay(name='rave_start_delay', event_type=None, delay=self.rave_lightshow_delay, handler=self.update_lamps)
 
 	def mode_stopped(self):
 		self.game.lamps.blackoutJackpot.disable()
+		self.game.lamps.tankCenter.disable()
 		self.game.lamps.multiballJackpot.disable()
 		self.game.coils.flasherBlackout.disable()
 		#Stop the rave flasher show
@@ -389,6 +421,7 @@ class Blackout(ChainFeature):
 			self.game.lamps.gi04.disable()
 			#Enable Blackout Ramp Flasher
 			self.game.lamps.blackoutJackpot.schedule(schedule=0x000F000F, cycle_seconds=0, now=True)
+			self.game.lamps.tankCenter.schedule(schedule=0x000F000F, cycle_seconds=0, now=True)
 			#Start Rave Lampshow
 			self.game.lampctrl.play_show('rave_lamps', repeat=True)
 		else:
@@ -400,6 +433,7 @@ class Blackout(ChainFeature):
 			self.game.lamps.gi04.pulse(0)
 			#Player still needs to shoot the center rampt o enter the rave
 			self.game.lamps.blackoutJackpot.schedule(schedule=0x000F000F, cycle_seconds=0, now=True)
+			self.game.lamps.tankCenter.schedule(schedule=0x000F000F, cycle_seconds=0, now=True)
 
 	def sw_centerRampExit_active(self, sw):
 		self.completed = True
@@ -409,23 +443,29 @@ class Blackout(ChainFeature):
 		self.check_for_completion()
 		if self.rave_started == 1:
 			#Rave in progress, so add captured raver
-			self.shots += 1
-			#Collect Jackpot
-			self.game.score(30000)
-			#Update Status
-			self.update_status()
-			#Play Audio "Raver Captured"
-			#
+			self.capture_raver()
 		else:
 			#Enter the Rave!!!
 			self.blackout_start_rave_seq()
 			
+	def capture_raver(self):
+		self.shots += 1
+		#Collect Jackpot
+		self.game.score(self.rave_capture_score)
+		#Update Status
+		self.update_status()
+		#Play Audio "Raver Captured"
+		self.game.sound.play_voice('capture_raver')
+		#Lampshow Placeholder
+		#Add bonus time to the clock
+		self.timer += self.rave_timer_inc
+		
 					
 	def check_for_completion(self):
 		self.update_status()
 		if self.shots == self.shots_required_for_completion:
 			self.completed = True
-			self.game.score(50000)
+			self.game.score(self.rave_completion_score)
 
 	def get_instruction_layers(self):
 		font = self.game.fonts['jazz18']

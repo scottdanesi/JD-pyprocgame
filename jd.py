@@ -117,6 +117,7 @@ class Attract(game.Mode):
 
 [Rules:]
 [Gerry Stellenberg]
+[Scott Danesi]
 
 [Tools and Framework:]
 [Adam Preble]
