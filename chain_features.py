@@ -8,6 +8,7 @@ import random
 curr_file_path = os.path.dirname(os.path.abspath( __file__ ))
 sound_path = curr_file_path + "/sound/FX/"
 voice_path = curr_file_path + "/sound/Voice/"
+music_path = curr_file_path + "/sound/"
 
 class ModeCompletedHurryup(game.Mode):
 	"""docstring for AttractMode"""
@@ -354,6 +355,8 @@ class Blackout(ChainFeature):
 		###Register Audio#############################################################################################
 		self.game.sound.register_sound('capture_raver', voice_path + "crimescenes/great shot.wav")
 		self.game.sound.register_sound('capture_raver', voice_path + "crimescenes/incredible shot.wav")
+		###Register music for Blackout Mode
+		self.game.sound.register_music('rave', music_path + "blackout_rave_music1.mp3")
 		###############END MODE CONSTANTS AND REGISTRATIONS###########################################################
 			
 	def mode_started(self):
