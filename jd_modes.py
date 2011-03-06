@@ -92,6 +92,7 @@ class JD_Modes(modes.Scoring_Mode):
 		self.game.sound.register_sound('right_ramp', sfx_path+"rightrampflyby.ogg")
 		self.game.sound.register_sound('left_ramp', sfx_path+"LoopFlyBy.wav")
 		self.game.sound.register_sound('slingshot', sfx_path+"Slingshot.wav")
+		self.game.sound.register_sound('popperl', sfx_path+'popperl.wav')
 
 		self.game.sound.register_sound('ball saved', voice_path+"pity ball.wav")
 		self.game.sound.register_sound('ball saved', voice_path+"cant you do better than that.wav")
@@ -727,9 +728,14 @@ class JD_Modes(modes.Scoring_Mode):
 			self.award_selection_award('crimescenes')
 		else:
 			self.flash_then_pop('flashersLowerLeft', 'popperL', 50)
+			self.delay(name='PopperL_delay', event_type=None, delay=.5, handler=self.popperL_play_audio)
+			
 
 		# Clear flag the ball will be kicked out normally next time.
 		self.present_hurryup_selection = False
+		
+	def popperL_play_audio(self):
+		self.game.sound.play('popperl')
 
 	def sw_popperR_active_for_200ms(self, sw):
 		if not self.any_mb_active():
@@ -886,6 +892,7 @@ class JD_Modes(modes.Scoring_Mode):
 		self.hurryup_expired()
 		if self.game.switches.popperL.is_active():
 			self.flash_then_pop('flashersLowerLeft', 'popperL', 50)
+			self.delay(name='PopperL_delay', event_type=None, delay=.5, handler=self.popperL_play_audio)
 		
 
 	def popperR_eject(self):
