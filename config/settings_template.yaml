@@ -7,7 +7,7 @@
 Machine:
   'Deadworld mod installed':
     options: [true, false]
-    default: false
+    default: true
   'Deadworld fast eject':
     options: [true, false]
     default: true

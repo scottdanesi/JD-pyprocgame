@@ -1,14 +1,14 @@
-Audits: {Avg Ball Time: '0:42', Avg Extra Balls: 0, Avg Game Time: '2:08', Avg Score: 10450,
-  Balls Played: 3, Games Played: 1, Games Started: 1}
+Audits: {Avg Ball Time: '1:02', Avg Extra Balls: 0, Avg Game Time: '4:15', Avg Score: 232784,
+  Balls Played: 27, Games Played: 6, Games Started: 7}
 ClassicHighScoreData:
+- {date: 'Sat Mar 05 20:43:03 2011', inits: SSD, score: 1013400}
 - {date: 'Sun Oct  3 17:38:46 2010', inits: GSS, score: 500000}
 - {date: 'Sun Oct  3 17:44:49 2010', inits: ASP, score: 400000}
 - {date: 'Sun Oct  3 16:22:47 2010', inits: JRP, score: 300000}
-- {date: 'Sun Oct  3 15:04:27 2010', inits: JAT, score: 200000}
-- {date: 'Sun Oct  3 22:05:01 2010', inits: JTW, score: 100000}
+- {date: 'Sat Mar 05 11:34:43 2011', inits: SSD, score: 237900}
 CrimescenesHighScoreData:
-- {date: 'Sun Oct  3 17:38:46 2010', inits: JRP, score: 2}
+- {date: 'Sat Mar 05 20:43:03 2011', inits: SSD, score: 8}
 InnerLoopsHighScoreData:
 - {date: 'Sun Oct  3 17:38:46 2010', inits: GSS, score: 2}
 OuterLoopsHighScoreData:
-- {date: 'Sun Oct  3 17:38:46 2010', inits: ASP, score: 2}
+- {date: 'Sat Mar 05 11:51:46 2011', inits: SSD, score: 2}
