@@ -340,8 +340,6 @@ class Blackout(ChainFeature):
 		self.shots = 0
 		self.rave_started = 0
 		self.update_status()
-		#Need to add code here to change music
-		#
 		filename = curr_file_path + "/dmd/blackout.dmd"
 		if os.path.isfile(filename):
 			anim = dmd.Animation().load(filename)
@@ -367,12 +365,7 @@ class Blackout(ChainFeature):
 		#add 58 seconds to the clock to match the music
 		self.timer = 58
 		#delay the flashers and lamps to match music
-		self.delay(name='rave_start_delay', event_type=None, delay=1.2, handler=self.blackout_start_rave_lamps)
-		
-	def blackout_start_rave_lamps(self):
-		#Start Flasher Sequences after delay
-		self.game.lampctrl.play_show('rave_lamps', repeat=True)
-		self.update_lamps()
+		self.delay(name='rave_start_delay', event_type=None, delay=1.2, handler=self.update_lamps)
 
 	def mode_stopped(self):
 		self.game.lamps.blackoutJackpot.disable()
@@ -396,6 +389,8 @@ class Blackout(ChainFeature):
 			self.game.lamps.gi04.disable()
 			#Enable Blackout Ramp Flasher
 			self.game.lamps.blackoutJackpot.schedule(schedule=0x000F000F, cycle_seconds=0, now=True)
+			#Start Rave Lampshow
+			self.game.lampctrl.play_show('rave_lamps', repeat=True)
 		else:
 			#Rave not started
 			#Update GI
