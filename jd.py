@@ -125,6 +125,7 @@ class Attract(game.Mode):
 [Sound and Music:]
 [Rob Keller]
 [Jonathan Coultan]
+[Scott Danesi]
 
 [Dots:]
 [Travis Highrise]
