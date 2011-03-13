@@ -352,6 +352,9 @@ class Blackout(ChainFeature):
 		self.rave_completion_score = 50000
 		###Register Rave Lampshows####################################################################################
 		self.game.lampctrl.register_show('rave_lamps', curr_file_path + "/lamps/flashers_blackout_rave.lampshow")
+		self.game.lampctrl.register_show('blackout_right_ramp', curr_file_path + "/lamps/blackout_seq_perp5.lampshow")
+		self.game.lampctrl.register_show('blackout_sniper_tower', curr_file_path + "/lamps/blackout_seq_perp3.lampshow")
+		self.game.lampctrl.register_show('blackout_subway', curr_file_path + "/lamps/blackout_seq_subway.lampshow")
 		###Register Audio#############################################################################################
 		self.game.sound.register_sound('capture_raver', voice_path + "crimescenes/great shot.wav")
 		self.game.sound.register_sound('capture_raver', voice_path + "crimescenes/incredible shot.wav")
@@ -407,7 +410,7 @@ class Blackout(ChainFeature):
 		#delay the flashers and lamps to match music
 		self.delay(name='rave_start_delay', event_type=None, delay=self.rave_lightshow_delay, handler=self.update_lamps)
 		
-	def light_rave_jackpot(self):
+	def increment_rave_jackpot(self):
 		#increment Jackpot Shot Number
 		if self.jackpot_shot_num == 3:
 			#Cycle Back to 1
@@ -425,6 +428,7 @@ class Blackout(ChainFeature):
 		self.game.coils.flasherBlackout.disable()
 		#Stop the rave flasher show
 		self.game.lampctrl.stop_show()
+		self.disable_jackpot_lights()
 		self.game.lamps.gi01.pulse(0)
 		self.game.lamps.gi02.pulse(0)
 		self.game.lamps.gi03.pulse(0)
@@ -442,24 +446,17 @@ class Blackout(ChainFeature):
 			#Enable Blackout Ramp Flasher
 			self.game.lamps.blackoutJackpot.schedule(schedule=0x000F000F, cycle_seconds=0, now=True)
 			self.game.lamps.tankCenter.schedule(schedule=0x000F000F, cycle_seconds=0, now=True)
-			#Start Rave Lampshow
-			self.game.lampctrl.play_show('rave_lamps', repeat=True)
-			#Disable jackpot lights
-			self.game.lamps.multiballJackpot.disable()
-			self.game.lamps.pickAPrize.disable()
+			#Start Rave Jackpot Lampshows
+			#self.disable_jackpot_lights()
 			if self.jackpot_shot_num == 1:
 				#Shoot the Subway
-				self.game.lamps.multiballJackpot.schedule(schedule=0x000F000F, cycle_seconds=0, now=True) 
-				self.game.lamps.pickAPrize.schedule(schedule=0x000F000F, cycle_seconds=0, now=True)
+				self.game.lampctrl.play_show('blackout_subway', repeat=True)
 			elif self.jackpot_shot_num == 2:
-				#Shoot Sniper Tower
-				self.game.lamps.perp2W.schedule(schedule=0x000F000F, cycle_seconds=0, now=True)
-				self.game.lamps.perp2R.schedule(schedule=0x000F000F, cycle_seconds=0, now=True)
-				self.game.lamps.perp2G.schedule(schedule=0x000F000F, cycle_seconds=0, now=True)
-				self.game.lamps.perp2Y.schedule(schedule=0x000F000F, cycle_seconds=0, now=True)
+				#Shoot right Ramp 
+				self.game.lampctrl.play_show('blackout_right_ramp', repeat=True)
 			elif self.jackpot_shot_num == 3:
-				#Shoot Right Ramp
-				self.game.lamps.perp2W.schedule(schedule=0x000F000F, cycle_seconds=0, now=True)
+				#Shoot Sniper Tower
+				self.game.lampctrl.play_show('blackout_sniper_tower', repeat=True)
 				
 		else:
 			#Rave not started
@@ -472,7 +469,40 @@ class Blackout(ChainFeature):
 			self.game.lamps.blackoutJackpot.schedule(schedule=0x000F000F, cycle_seconds=0, now=True)
 			self.game.lamps.tankCenter.schedule(schedule=0x000F000F, cycle_seconds=0, now=True)
 			
+	def disable_jackpot_lights(self):
+		#Disable jackpot lights
+		if self.jackpot_shot_num == 2:
+			#Subway
+			self.game.lamps.multiballJackpot.disable()
+			self.game.lamps.pickAPrize.disable()
+		elif self.jackpot_shot_num == 3:
+			#right Ramp
+			self.game.lamps.perp5W.disable()
+			self.game.lamps.perp5R.disable()
+			self.game.lamps.perp5G.disable()
+			self.game.lamps.perp5Y.disable()
+		elif self.jackpot_shot_num == 1:
+			#Sniper Tower
+			self.game.lamps.perp3W.disable()
+			self.game.lamps.perp3R.disable()
+			self.game.lamps.perp3G.disable()
+			self.game.lamps.perp3Y.disable()
+			
+	def sw_subwayEnter1_closed(self, sw):
+		if self.jackpot_shot_num == 1:
+			#Rave in progress and jackpot lit, so add captured raver
+			self.capture_raver()
+			
+	def sw_rightRampExit_active(self, sw):
+		if self.jackpot_shot_num == 2:
+			#Rave in progress and jackpot lit, so add captured raver
+			self.capture_raver()
 
+	def sw_popperR_active_for_300ms(self, sw):
+		if self.jackpot_shot_num == 3:
+			#Rave in progress and jackpot lit, so add captured raver
+			self.capture_raver()
+		
 	def sw_centerRampExit_active(self, sw):
 		self.completed = True
 		self.game.coils.flasherBlackout.schedule(schedule=0x000F000F, cycle_seconds=0, now=True)
@@ -497,7 +527,7 @@ class Blackout(ChainFeature):
 		#Lampshow Placeholder
 		#Add bonus time to the clock
 		self.timer += self.rave_timer_inc
-		self.light_rave_jackpot()
+		self.increment_rave_jackpot()
 		self.update_lamps()
 		
 					
