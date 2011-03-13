@@ -1,8 +1,8 @@
 # This is a flasher show that, when looped, will circle the playfield clockwise 
 # Created by Scott Danesi Feb-05-2011
-coil:flashersLowerLeft  | ..                        
-coil:flasherPursuitL    |   ..                      
-coil:flasherCursedEarth |     ..                    
-coil:flasherGlobe       |       ..                  
-coil:flashersRtRamp     |         ..                
-coil:flasherPursuitR    |           ..               
+coil:flashersLowerLeft  | ..
+coil:flasherPursuitL    |   ..
+coil:flasherCursedEarth |     ..
+coil:flasherGlobe       |       ..
+coil:flashersRtRamp     |         ..
+coil:flasherPursuitR    |           ..

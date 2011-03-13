@@ -1,0 +1,10 @@
+# This is a test lampshow file for Judge Dredd.
+# Chain links, left-rig ht 
+multiballJackpot        | .....
+pickAPrize              |      .....
+coil:flashersLowerLeft  | ..
+coil:flasherPursuitL    |   ..
+coil:flasherCursedEarth |     ..
+coil:flasherGlobe       |     ..
+coil:flashersRtRamp     |       ..
+coil:flasherPursuitR    |         ..

@@ -1,0 +1,12 @@
+# This is a test lampshow file for Judge Dredd.
+# Chain links, left-rig ht 
+perp5W                  | .     .
+perp5R                  |  .   . .
+perp5Y                  |   . .   .
+perp5G                  |    .     .
+coil:flashersLowerLeft  | ..
+coil:flasherPursuitL    |   ..
+coil:flasherCursedEarth |     ..
+coil:flasherGlobe       |     ..
+coil:flashersRtRamp     |       ..
+coil:flasherPursuitR    |         ..
