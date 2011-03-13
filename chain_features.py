@@ -406,6 +406,17 @@ class Blackout(ChainFeature):
 		self.timer = self.rave_initial_timer
 		#delay the flashers and lamps to match music
 		self.delay(name='rave_start_delay', event_type=None, delay=self.rave_lightshow_delay, handler=self.update_lamps)
+		
+	def light_rave_jackpot(self):
+		#increment Jackpot Shot Number
+		if self.jackpot_shot_num == 3:
+			#Cycle Back to 1
+			self.jackpot_shot_num = 1
+		else:
+			#increment Jackpot
+			self.jackpot_shot_num += 1
+			
+		
 
 	def mode_stopped(self):
 		self.game.lamps.blackoutJackpot.disable()
@@ -433,18 +444,22 @@ class Blackout(ChainFeature):
 			self.game.lamps.tankCenter.schedule(schedule=0x000F000F, cycle_seconds=0, now=True)
 			#Start Rave Lampshow
 			self.game.lampctrl.play_show('rave_lamps', repeat=True)
+			#Disable jackpot lights
+			self.game.lamps.multiballJackpot.disable()
+			self.game.lamps.pickAPrize.disable()
 			if self.jackpot_shot_num == 1:
-				#Shoot Right Ramp
-				self.game.lamps.perp1W.schedule(schedule=0x000F000F, cycle_seconds=0, now=True)
+				#Shoot the Subway
+				self.game.lamps.multiballJackpot.schedule(schedule=0x000F000F, cycle_seconds=0, now=True) 
+				self.game.lamps.pickAPrize.schedule(schedule=0x000F000F, cycle_seconds=0, now=True)
 			elif self.jackpot_shot_num == 2:
-				#Shoot Left Ramp
-				self.game.lamps.perp1W.schedule(schedule=0x000F000F, cycle_seconds=0, now=True)
-			elif self.jackpot_shot_num == 3:
 				#Shoot Sniper Tower
-				self.game.lamps.perp1W.schedule(schedule=0x000F000F, cycle_seconds=0, now=True)
-			elif self.jackpot_shot_num == 4:
-				#Shoot Subway
-				self.game.lamps.perp1W.schedule(schedule=0x000F000F, cycle_seconds=0, now=True)
+				self.game.lamps.perp2W.schedule(schedule=0x000F000F, cycle_seconds=0, now=True)
+				self.game.lamps.perp2R.schedule(schedule=0x000F000F, cycle_seconds=0, now=True)
+				self.game.lamps.perp2G.schedule(schedule=0x000F000F, cycle_seconds=0, now=True)
+				self.game.lamps.perp2Y.schedule(schedule=0x000F000F, cycle_seconds=0, now=True)
+			elif self.jackpot_shot_num == 3:
+				#Shoot Right Ramp
+				self.game.lamps.perp2W.schedule(schedule=0x000F000F, cycle_seconds=0, now=True)
 				
 		else:
 			#Rave not started
@@ -456,7 +471,7 @@ class Blackout(ChainFeature):
 			#Player still needs to shoot the center rampt o enter the rave
 			self.game.lamps.blackoutJackpot.schedule(schedule=0x000F000F, cycle_seconds=0, now=True)
 			self.game.lamps.tankCenter.schedule(schedule=0x000F000F, cycle_seconds=0, now=True)
-			self.game.lamps.perp2W.pulse(0)
+			
 
 	def sw_centerRampExit_active(self, sw):
 		self.completed = True
@@ -482,6 +497,8 @@ class Blackout(ChainFeature):
 		#Lampshow Placeholder
 		#Add bonus time to the clock
 		self.timer += self.rave_timer_inc
+		self.light_rave_jackpot()
+		self.update_lamps()
 		
 					
 	def check_for_completion(self):
