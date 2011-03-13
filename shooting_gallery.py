@@ -10,6 +10,7 @@ import random
 
 curr_file_path = os.path.dirname(os.path.abspath( __file__ ))
 voice_path = curr_file_path + "/sound/Voice/shooting_gallery/"
+music_path = curr_file_path + "/sound/"
 
 class ShootingGallery(game.Mode):
 	def __init__(self, game, priority, gallery_filename, cows_filename, scope_filename, cow_mode):
@@ -20,7 +21,7 @@ class ShootingGallery(game.Mode):
 		self.cow_mode = cow_mode
 		self.image_frames = self.gallery_images_anim.frames[0].create_frames_from_grid( 6, 2 )
 		self.cow_image_frames = self.cow_images_anim.frames[0].create_frames_from_grid( 4, 1 )
-
+		
 		self.scope_and_shot_anim = dmd.Animation().load(scope_filename)
 		self.on_complete = None
 
@@ -33,6 +34,10 @@ class ShootingGallery(game.Mode):
 		for i in range(1,3):
 			filename = 'mother ' + str(i) + '.wav'
 			self.game.sound.register_sound(keyname, voice_path+filename)
+			
+		self.game.sound.register_music('video_mode_musicA', music_path+'Scott Danesi - VideoModeA.wav')
+		self.game.sound.register_music('video_mode_musicB', music_path+'Scott Danesi - VideoModeB.wav')
+		self.game.sound.register_music('video_mode_musicC', music_path+'Scott Danesi - VideoModeC.wav')
 
 	def mode_started(self):
 		self.gallery_index = 0
@@ -54,6 +59,8 @@ class ShootingGallery(game.Mode):
 		self.status_layer = dmd.TextLayer(128/2, 7, self.game.fonts['jazz18'], "center", opaque=False).set_text("Video Mode")
 #		self.status_layer.composite_op = 'blacksrc'
 		self.intro_layer_0 = dmd.GroupedLayer(128, 32, [self.status_layer])
+		self.game.sound.fadeout_music()
+		self.delay(name='play_intro_music', event_type=None, delay=.2, handler=self.play_intro_music)
 
 		if self.cow_mode:
 			enemy_text = "Shoot mean cows"
@@ -89,10 +96,18 @@ class ShootingGallery(game.Mode):
 
 		self.layer.on_complete = self.start
 
+	def play_intro_music(self):
+		self.game.sound.play_music('video_mode_musicA', loops=-1)
+	
 	def start(self):
 
 		self.intro_active = False
 		self.status_layer.set_text("")
+		
+		#Play Background Music
+		self.game.sound.stop_music()
+		self.game.sound.play_music('video_mode_musicB', loops=-1)
+
 
 		# Create the layers for each target
 		self.pos_layers = []
@@ -155,6 +170,8 @@ class ShootingGallery(game.Mode):
 
 	def finish(self):
 		self.mode = 'complete'
+		self.game.sound.stop_music()
+		self.game.sound.play_music('video_mode_musicC', loops=-1)
 		self.status_layer.set_text("Completed!")
 		self.instruction_layer_21.set_text("Completion Bonus:")
 		self.instruction_layer_22.set_text(str(100000))
@@ -178,6 +195,7 @@ class ShootingGallery(game.Mode):
 	
 	def wrap_up(self):
 		self.game.enable_flippers(True)
+		self.game.sound.stop_music()
 		if self.on_complete != None:
 			self.on_complete(self.success)
 
