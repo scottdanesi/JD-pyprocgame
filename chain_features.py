@@ -341,7 +341,7 @@ class Blackout(ChainFeature):
 		###Ball Save Number of Balls to Save##########################################################################
 		self.rave_ball_save_number_of_saves = 1
 		###Initial Time to Shoot The Center Ramp (in seconds)#########################################################
-		self.rave_initial_timer = 58
+		self.rave_initial_timer = 30
 		###Lightshow Delay Time After Rave Started (in seconds)#######################################################
 		self.rave_lightshow_delay = 1.2 #This is used to match the lights with the start of the rave music############
 		###Timer Increment After Raver Captured (in seconds)##########################################################
@@ -368,6 +368,7 @@ class Blackout(ChainFeature):
 		self.shots = 0
 		self.rave_started = 0
 		self.jackpot_shot_num = 0
+		self.subway_missed_switch = 1
 		self.update_status()
 		filename = curr_file_path + "/dmd/blackout.dmd"
 		if os.path.isfile(filename):
@@ -391,6 +392,7 @@ class Blackout(ChainFeature):
 	def blackout_start_rave_seq(self):
 		self.rave_started = 1
 		self.jackpot_shot_num = 1
+		self.trip_check()
 		self.update_status()
 		#Switch Music Track
 		self.game.sound.stop_music()
@@ -428,7 +430,7 @@ class Blackout(ChainFeature):
 		self.game.coils.flasherBlackout.disable()
 		#Stop the rave flasher show
 		self.game.lampctrl.stop_show()
-		self.disable_jackpot_lights()
+		#self.disable_jackpot_lights()
 		self.game.lamps.gi01.pulse(0)
 		self.game.lamps.gi02.pulse(0)
 		self.game.lamps.gi03.pulse(0)
@@ -491,7 +493,18 @@ class Blackout(ChainFeature):
 	def sw_subwayEnter1_closed(self, sw):
 		if self.jackpot_shot_num == 1:
 			#Rave in progress and jackpot lit, so add captured raver
+			self.subway_missed_switch = 0
 			self.capture_raver()
+			
+	# Ball might jump over first switch.  Use 2nd switch as a catchall.
+	def sw_subwayEnter2_closed(self, sw):
+		if self.jackpot_shot_num == 1:
+			#Rave in progress and jackpot lit, so add captured raver
+			if self.subway_missed_switch == 1:
+				#switch Missed
+				self.capture_raver()
+			else:
+				self.subway_missed_switch = 1
 			
 	def sw_rightRampExit_active(self, sw):
 		if self.jackpot_shot_num == 2:
@@ -528,8 +541,14 @@ class Blackout(ChainFeature):
 		#Add bonus time to the clock
 		self.timer += self.rave_timer_inc
 		self.increment_rave_jackpot()
+		self.trip_check()
 		self.update_lamps()
 		
+	def trip_check(self):
+		if self.jackpot_shot_num == 1:
+			if self.game.switches.dropTargetD.is_inactive():
+				self.game.coils.tripDropTarget.pulse(40)
+				self.delay(name='trip_check', event_type=None, delay=.400, handler=self.trip_check)	
 					
 	def check_for_completion(self):
 		self.update_status()
