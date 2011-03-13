@@ -1,11 +1,11 @@
-Audits: {Avg Ball Time: '1:02', Avg Extra Balls: 0, Avg Game Time: '4:15', Avg Score: 232784,
-  Balls Played: 27, Games Played: 6, Games Started: 7}
+Audits: {Avg Ball Time: '0:53', Avg Extra Balls: 0, Avg Game Time: '3:42', Avg Score: 201961,
+  Balls Played: 41, Games Played: 10, Games Started: 11}
 ClassicHighScoreData:
 - {date: 'Sat Mar 05 20:43:03 2011', inits: SSD, score: 1013400}
 - {date: 'Sun Oct  3 17:38:46 2010', inits: GSS, score: 500000}
+- {date: 'Sat Mar 12 17:20:29 2011', inits: SSD, score: 425600}
 - {date: 'Sun Oct  3 17:44:49 2010', inits: ASP, score: 400000}
 - {date: 'Sun Oct  3 16:22:47 2010', inits: JRP, score: 300000}
-- {date: 'Sat Mar 05 11:34:43 2011', inits: SSD, score: 237900}
 CrimescenesHighScoreData:
 - {date: 'Sat Mar 05 20:43:03 2011', inits: SSD, score: 8}
 InnerLoopsHighScoreData:
