@@ -2,6 +2,9 @@ import procgame
 from procgame import *
 
 voice_path = "./games/jd/sound/Voice/"
+#voice_path = curr_file_path + "/sound/Voice/attract/"
+music_path = "./games/jd/sound/"
+#music_path = curr_file_path + "/sound/"
 
 class Bonus(game.Mode):
 	"""docstring for Bonus"""
@@ -16,14 +19,17 @@ class Bonus(game.Mode):
 		self.timer = 0
 		self.delay_time = 1
 		self.game.sound.register_sound('drain', voice_path+"drain/jd - prepare to be judged.wav")
+		self.game.sound.register_music('bonus_tune', music_path+"Scott Danesi - Bonus.wav")
 
 	def mode_started(self):
 		# Disable the flippers
 		self.game.enable_flippers(enable=False)
+		self.game.sound.play_music('bonus_tune', loops=0)
 
 	def mode_stopped(self):
 		# Enable the flippers
 		self.game.enable_flippers(enable=True)
+		self.game.sound.stop_music()
 
 	def compute(self, base, x, exit_function):
 		self.game.sound.play('drain')
