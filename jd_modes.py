@@ -36,7 +36,7 @@ class JD_Modes(modes.Scoring_Mode):
 		self.info.callback = self.info_callback
 		self.ultimate_challenge = UltimateChallenge(game, priority+10)
 		self.mode_pursuit = Pursuit(game, priority+1)
-		self.mode_blackout = Blackout(game, priority+1)
+		self.mode_blackout = Blackout(game, priority+2)
 		self.mode_sniper = Sniper(game, priority+1)
 		self.mode_battleTank = BattleTank(game, priority+1)
 		self.mode_impersonator = Impersonator(game, priority+1)
@@ -113,7 +113,6 @@ class JD_Modes(modes.Scoring_Mode):
 		self.game.sound.register_music('multiball', music_path+"40 Second guitar solo.aif")
 		self.game.sound.register_music('multiball', music_path+"55 second loopable -- Sonya.aif")
 		self.game.sound.register_music('multiball', music_path+"105 second loopable -- Sisyphus.aif")
-		
 
 	def reset(self):
 		#self.state = 'pre_ultimate_challenge'
