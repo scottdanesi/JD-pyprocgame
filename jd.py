@@ -63,7 +63,7 @@ class Attract(game.Mode):
 		self.game.sound.register_sound('attract', voice_path+'judge death - the sentence is death.wav')
 		self.game.sound.register_sound('attract', voice_path+'judge fire - for you the party is over.wav')
 		self.game.sound.register_sound('attract', voice_path+'judge fire - let the flames of justice cleanse you.wav')
-
+		
 	def mode_topmost(self):
 		pass
 
@@ -143,7 +143,7 @@ class Attract(game.Mode):
 """)
 
 		self.credits_layer = dmd.PanningLayer(width=128, height=32, frame=credits_frame, origin=(0,0), translate=(0,1), bounce=False)
-
+		
 		filename = curr_file_path + "/dmd/guntech.dmd"
 		if os.path.isfile(filename):
 			anim = dmd.Animation().load(filename)
@@ -219,6 +219,8 @@ class Attract(game.Mode):
 
 		self.layer = dmd.ScriptedLayer(width=128, height=32, script=script)
 		self.layer.on_complete = self.post_game_display
+		
+		
 
 	def mode_stopped(self):
 		pass
@@ -738,9 +740,10 @@ class Game(game.BasicGame):
 		
 		#self.sound.register_sound('bonus', shared_sound_path+'coin.wav') # Used as bonus is counting up.
 		#self.sound.register_sound('bonus', shared_sound_path+'exp_smoother.wav') # Used as bonus is counting up.
-		self.sound.register_sound('bonus', sound_path+'DropTarget.wav') # Used as bonus is counting up.
+		self.sound.register_sound('bonus', sound_path+'SSD_Gunshot1.wav') # Used as bonus is counting up.
 		#self.sound.register_sound('high score', voice_high_score_path+'promoted.wav')
 		self.sound.register_sound('high score', voice_high_score_path+'congratulations.wav')
+		self.sound.register_music('game_over', music_path + "Scott Danesi - Game Over2.wav")
 		
 		# Setup fonts
 		self.fonts = {}
@@ -886,7 +889,6 @@ class Game(game.BasicGame):
 		#self.modes.add(self.attract_mode)
 		self.deadworld.mode_stopped()
 		# Restart attract mode lampshows
-
 		# High Score Stuff
 		seq_manager = highscore.EntrySequenceManager(game=self, priority=2)
 		seq_manager.finished_handler = self.highscore_entry_finished
@@ -911,14 +913,14 @@ class Game(game.BasicGame):
 		highscore_entry_mode.prompt()
 
 	def highscore_entry_finished(self, mode):
+		self.sound.play_music('game_over', loops=0)
 		self.modes.remove(mode)
-
 		self.modes.add(self.attract_mode)
-
+		#self.sound.play_music('game_over', loops=0)
 		#self.attract_mode.change_display(99)
 		# setup display sequence in Attract.
 		self.attract_mode.game_over_display()
-
+		
 		# Handle stats for last ball here
 		self.game_data['Audits']['Avg Ball Time'] = self.calc_time_average_string(self.game_data['Audits']['Balls Played'], self.game_data['Audits']['Avg Ball Time'], self.ball_time)
 		self.game_data['Audits']['Balls Played'] += 1
@@ -931,6 +933,7 @@ class Game(game.BasicGame):
 		for i in range(0,len(self.players)):
 			self.game_data['Audits']['Avg Score'] = self.calc_number_average(self.game_data['Audits']['Games Played'], self.game_data['Audits']['Avg Score'], self.players[i].score)
 		self.save_game_data()
+		
 
 	def set_status(self, text):
 		self.dmd.set_message(text, 3)
