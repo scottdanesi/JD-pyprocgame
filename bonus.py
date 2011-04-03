@@ -24,12 +24,16 @@ class Bonus(game.Mode):
 	def mode_started(self):
 		# Disable the flippers
 		self.game.enable_flippers(enable=False)
+		#disable ball search
+		self.game.ball_search.disable()
 		self.game.sound.play_music('bonus_tune', loops=0)
 
 	def mode_stopped(self):
 		# Enable the flippers
 		self.game.enable_flippers(enable=True)
-		self.game.sound.stop_music()
+		# Re-enable ball search
+		self.game.ball_search.enable()
+		self.game.sound.fadeout_music()
 
 	def compute(self, base, x, exit_function):
 		self.game.sound.play('drain')
